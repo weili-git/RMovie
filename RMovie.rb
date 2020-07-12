@@ -1,4 +1,5 @@
 # Encoding: UTF-8
+require 'fileutils'
 
 class RMovie
     def initialize(filename)
@@ -25,9 +26,11 @@ class RMovie
     end
     def repeat(start_, time_, times_, output_)
         f = File.new("temp.txt", "w")
-        times_.times do |i|
-            slice(start_, time_, "#{i}.mp4")  # not rm.slice
-            f.syswrite("file '#{i}.mp4'\n")
+        slice(start_, time_, "0.mp4")
+        f.syswrite("file '0.mp4'\n")
+        (times_-1).times do |i|
+            FileUtils.copy_file("0.mp4", "#{i+1}.mp4")
+            f.syswrite("file '#{i+1}.mp4'\n")
         end
         f.close
         concat("temp.txt", output_)
